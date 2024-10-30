@@ -1,0 +1,18 @@
+# Documentation
+
+To build documentation from source code in Prolog, you might want try [DocLog](https://github.com/aarroyoc/doclog). It is itself implemented in prolog.
+
+This tutorial is a DocLog-project. To build and serve it, run:
+
+```sh
+git clone git@github.com:johannesloetzsch/prolog-tutorial.git; cd prolog-tutorial
+
+python3 -m http.server -d target &
+nix run github:johannesloetzsch/doclog#watch . target
+```
+
+Now it should be available at [http://localhost:8000/](http://localhost:8000/).
+
+Let's change one of the files …
+
+…and on the terminal you should see how the documentation is being rebuild. To see the changes, please refresh your browser.

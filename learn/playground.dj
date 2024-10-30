@@ -1,0 +1,125 @@
+# Playground
+
+There is a scryer based [Prolog Playground](https://play.scryer.pl/) 🤗
+
+You can simply try Prolog at this simple website without installing anything — No more excuses not to try Prolog 😜
+
+
+## Usage
+
+The Playground presents two inputs. A big textarea one on the left and a small one on the right of it.
+
+In the big textarea you can enter your *knowledge base* ([facts and rules](https://en.wikipedia.org/wiki/Prolog#Rules_and_facts)).
+
+Than you can use the small input marked with `?-` to *query* them.
+
+
+## Examples
+
+This awesome project is still quite new and at the moment unfortunatelly misses some good examples.
+
+…if you like webdevelopment, maybe you want fix that ;)
+
+
+### Hello World
+
+For traditional reasons let's start with printing "Hello World!".
+
+Todo so, we don't need and facts in our knowledge base but only this query:
+
+```pl
+?-
+write('Hello World!').
+```
+```
+=>
+Hello World!   true.
+```
+
+Be aware, that
+
+* you must not write `?-` (This is only the [prompt](https://en.wikipedia.org/wiki/Command-line_interface#Command_prompt))
+* every `fact`, `rule` and `query` must end with a "`.`" (dot character)
+
+While "Hello Wordl!" are trivial examples in most programming languages, it is not the most typical in prolog. We later give an [explanation](hello_world.html) how it works.
+
+
+### logicians and computer pioneers
+
+To understand prolog, let's do some tasks typical for logic programming…
+
+We use a knowlede base with very simple facts. Copy this into the big textarea on the left:
+
+```pl
+logician("Aristoteles").
+logician("Charles Babbage").
+logician("Kurt Gödel").
+logician("David Hilbert").
+logician("Gottlob Frege").
+logician("Gottfried Wilhelm Leibniz").
+logician("Blaise Pascal").
+logician("Amir Pnueli").
+logician("Emil Leon Post").
+logician("Michael Oser Rabin").
+logician("Bertrand Russell").
+logician("Alfred Tarski").
+logician("Alan Turing").
+logician("Ludwig Wittgenstein").
+
+computer_pioneer("Charles Babbage").
+computer_pioneer("Noam Chomsky").
+computer_pioneer("Alonzo Church").
+computer_pioneer("Edsger Wybe Dijkstra").
+computer_pioneer("Kurt Gödel").
+computer_pioneer("Sir Charles Antony Richard Hoare").
+computer_pioneer("Stephen Cole Kleene").
+computer_pioneer("Donald Knuth").
+computer_pioneer("Ada Lovelace").
+computer_pioneer("Marvin Minsky").
+computer_pioneer("John von Neumann").
+computer_pioneer("Amir Pnueli").
+computer_pioneer("Emil Leon Post").
+computer_pioneer("Michael Oser Rabin").
+computer_pioneer("Bertrand Russell").
+computer_pioneer("Ken Thompson").
+computer_pioneer("Alan Turing").
+computer_pioneer("Joseph Weizenbaum").
+computer_pioneer("Konrad Zuse").
+```
+
+Now we can query… 
+
+Let's ask who is `computer_pioneer` *and* `logician`
+
+```pl
+?-
+computer_pioneer(Who), logician(Who).
+```
+```
+=>
+   Who = "Charles Babbage"
+;  Who = "Kurt Gödel"
+;  Who = "Amir Pnueli"
+;  Who = "Emil Leon Post"
+;  Who = "Michael Oser Rabin"
+;  Who = "Bertrand Russell"
+;  Who = "Alan Turing"
+;  false.
+```
+
+To query for `computer_pioneer`s *or* `logician`s, separate the terms with "`;`" instead of "`,`"
+
+```pl
+?-
+computer_pioneer(Who); logician(Who).
+```
+
+To query for `logician`s, who are not (primarily) known as `computer_pioneer`, we use a *not*, written as "`\+`"
+
+```pl
+?-
+logician(Who), \+ computer_pioneer(Who).
+```
+
+
+More examples on this knowlede base can be found in this repository in [src/scientists.pl](../scientists.html).

@@ -1,0 +1,72 @@
+# REPL & Consult
+
+When starting `scryer-prolog` (oder another prolog interpreter), you can specify which files with facts and rules should be loaded.
+
+```sh
+scryer-prolog src/facts_about_prolog.pl
+```
+
+
+Using the the `-g` argument allows defining a goal (your entrypoint into the program).
+
+When starting prolog without `-g` (or when it finished executing the goal), it will open a prompt, allowing to write queries interactively. This environment is called REPL [read–eval–print loop](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop).
+
+In the default query mode, you can't directly enter new facts or rules, but only write queries. The following describes how to update your knowledge base:
+
+
+## Consulting facts and rules from the REPL
+
+Loading Prolog files is called “consulting”.
+
+
+```pl
+?- 
+consult('src/facts_about_prolog.pl').
+```
+
+
+The same can be achieved using this special notation:
+
+
+```pl
+?- 
+['src/facts_about_prolog.pl'].
+```
+
+Once we have the knowlede base loaded, we can ask queries. Let's ask for facts about prolog:
+
+```pl
+?- 
+fact("prolog", _, P, O).
+```
+
+
+## Interactive
+
+At REPL you can use the `[user]` special notation to read prolog text from standard input.
+
+When finished, you press `Ctrl-d`. Than the entered prolog text will be consulted.
+
+```pl
+?-
+[user].
+fruit(orange).
+fruit(banana).
+```
+
+<`Ctrl-d`>
+
+```pl
+?-
+fruit(X).
+```
+
+Prolog will search for a solution and display it:
+
+```
+X = orange
+```
+
+If you are only interested whether any solution exists, we are done. Press `Enter` and you get back to the query prompt.
+
+If you want to see all results, press `Space` for the next one…

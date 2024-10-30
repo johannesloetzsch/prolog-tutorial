@@ -1,0 +1,41 @@
+# Nix packaging
+
+Scryer-prolog has good support for the declarative and reproducible buildsystem [Nix](https://nixos.org/) :)
+
+The repo contains a [flake.nix](https://github.com/mthom/scryer-prolog/blob/master/flake.nix) and it is available in [nixpkgs](https://github.com/NixOS/nixpkgs/blob/nixos-24.05/pkgs/development/compilers/scryer-prolog/default.nix). Therefore using scryer with nix is very easy:
+
+```sh
+nix run nixpkgs#scryer-prolog
+```
+
+## Package your own prolog code
+
+Let's have a look at an example…
+
+I packaged the static site generator [DocLog](https://github.com/aarroyoc/doclog), that builds documentation from source code in Prolog.
+
+Btw, this tutorial is written with DocLog ;)
+
+DocLog has 2 external dependencies:
+
+* [teruel](https://github.com/aarroyoc/teruel) is a Tera and Jinja inspired template engine for prolog
+* [djota](https://github.com/aarroyoc/djota) renders the Markdown subset [Djot](https://djot.net/) to html
+
+Without nix, the default way of setting up DocLog is using this [Makefile](https://github.com/aarroyoc/doclog/blob/master/Makefile).
+
+The [nix flake](https://github.com/johannesloetzsch/doclog/blob/master/flake.nix) contains:
+
+* source packages for the dependencies `teruel` and `djota` (using `fetchFromGitHub`)
+* the `doclog` package created with `mkDerivation`
+* the apps `doclog`, `doclog_watch` and the alias `watch` point to the relevant binaries and allow trivial usage with `nix run`
+
+
+```sh
+nix run github:aarroyoc/doclog# . www
+#-> creates documentation from docstrings in prolog files from `.` and places them into the `www` directory.
+```
+
+```sh
+nix run github:aarroyoc/doclog#watch . www
+#-> this wrapper uses inotifywait to rebuild everytime the source changed
+```

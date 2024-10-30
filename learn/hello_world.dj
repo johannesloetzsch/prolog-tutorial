@@ -1,0 +1,29 @@
+# Hello World
+
+```pl
+?-
+write('Hello World!').
+
+=>
+Hello World!   true.
+```
+
+Now that we understood [how prolog works](semantics.html), let's revisit `Hello World`.
+
+What is happening here?
+
+Didn't we just learn how sets of Horn clauses are solved by backward chaining? We the solver calculated valid variable bindings to solve our constraints. But where is the output of `write` coming from?
+In other languages we maybe wouldn't ask this question since we are used to manipulating global state, memory addresses and registers; there it is normal to call low level libraries and syscalls. But in prolog?
+
+`write/1` is a [builtin](https://www.scryer.pl/builtins]. You find it's implementation [here](https://github.com/mthom/scryer-prolog/blob/e8ef9bc33ad439321e8d5392db64059e70f709ff/src/lib/builtins.pl#L682). It calls [$write_term](https://github.com/mthom/scryer-prolog/blob/e8ef9bc33ad439321e8d5392db64059e70f709ff/build/instructions_template.rs#L492), which is implemented in the prolog interpreter itself.
+
+Prolog provides the necessary builtins for [I/O](https://en.wikipedia.org/wiki/Input/output), so you can access files or sockets (if you want write a webserver in prolog), …
+
+This I/O-builtins are triggered by the prolog engine when the predicate is evaluated.
+
+
+In contrast to most programming languages, prolog allows pure declarative programming without manipulating state. This enables very flexible, testable, reusable and even provable code.
+However, when needed you can include well [encapsulated I/O-builtins](https://en.wikipedia.org/wiki/Monad_(functional_programming)). 
+
+
+

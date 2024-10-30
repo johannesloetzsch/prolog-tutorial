@@ -1,0 +1,12 @@
+# Extensions
+
+If portability of your code is not significant for your choice of an implementation, you might want to look for the many interesting implementation specific prolog [Extensions](https://en.wikipedia.org/wiki/Prolog#Extensions). They include:
+
+* Type systems
+* Modes (specifying which arguments of a predicate are inputs or output)
+* [Constraint programming](https://en.wikipedia.org/wiki/Constraint_logic_programming) [@Scryer](https://github.com/mthom/scryer-prolog/tree/master?tab=readme-ov-file#constraint-logic-programming-clp)
+* Concurrency (MPI)
+* [Transaction logic](https://en.wikipedia.org/wiki/Transaction_logic)
+* Web programming (sockets+websockets, xml, json, rdf, owl)
+* Graphics libraries
+* Object-orientation (e.g. [F-logic](https://en.wikipedia.org/wiki/F-logic), [Flora-2](https://en.wikipedia.org/wiki/Flora-2)) … Btw. I wrote [a thesis](./resources/beleg.pdf) about how to represent Ontologies with Flora-2.

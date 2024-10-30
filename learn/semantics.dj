@@ -1,0 +1,171 @@
+# Semantics
+
+## How is prolog code evaluated?
+
+To understand this, we should understand how clauses look like.
+
+
+### Rules
+
+At the end of the [Syntax](syntax.html) chapter, we explained, that prolog rules (including facts and queries) are written in the form of [Horn clauses](https://en.wikipedia.org/wiki/Horn_clause).
+
+```pl
+HEAD :- BODY.
+```
+
+HEAD ← BODY  ≡  HEAD ∨ ¬ BODY  ≡  HEAD ∨ ¬ ( p1 Λ p2 Λ p3 Λ … Λ pn )  ≡  HEAD ∨ ¬ p1 ∨  ¬ p2 ∨  ¬ p3 ∨  … ∨  ¬ pn
+
+For every clause, either one of the conditions ( p1, …, pn ) is wrong or HEAD (the conclusion) must be true.
+
+
+### Facts
+
+Facts are special cases of rules, where the BODY (condition) is empty.
+
+```pl
+HEAD :- true.
+```
+
+HEAD ← true  ≡  HEAD
+
+The HEAD (fact) must always be true, for all cases (without conditions).
+
+
+### Queries (Goals)
+
+```pl
+?- QUERY.
+```
+
+QUERY ≡ p1 Λ p2 Λ p3 Λ … Λ pn
+
+Queries are conjunctions. We search an interpretation (variable assignment), so that all predicates are true at the same time. The variables are restricted by the rules and facts. All rules must interpret as true under the valid variable assignments.
+
+This search for valid solutions of variable assignment is called [satisfiability testing](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) or SAT-solving.
+
+
+#### Refutation by contradiction
+
+For efficiently prooving, that a solution is always true, a [proof by contradiction](https://en.wikipedia.org/wiki/Proof_by_contradiction) is used:
+We assume that the negation of the original query would be true, find a contradiction and can therefore refute the negation of the query.
+
+In the assumption, we want to refute, we set `BODY ≡ ¬ QUERY`.
+
+BODY  ≡  ¬ ( p1 Λ p2 Λ p3 Λ … Λ pn )  ≡  ¬ p1 ∨  ¬ p2 ∨  ¬ p3 ∨  … ∨  ¬ pn
+
+A contradiction would be `false ← BODY`, we can add this clause to the rules and facts and search for a solution.
+
+```pl
+false :- BODY.
+```
+
+false ← BODY  ≡  false ∨ ¬ BODY  ≡  ¬ BODY  ≡  QUERY
+
+## Backward chaining
+
+For searching a variable assignment which is satisfying all our rules, an inference method called [backward chaining](https://en.wikipedia.org/wiki/Backward_chaining) (or backward reasoning) is used.
+
+The recursive algorithm is a goaldriven approach. It tries to substitude goals by matching rules. Here a trivial implementation:
+
+```py
+def backward_chaining(facts, rules, goal, variables={}):
+    if goal in facts:
+	# The goal is already known to be true based on a facts.
+        return True, variables
+
+    for rule in rules:
+        if goal == rule.conclusion:
+            for condition in rule.conditions:
+                for fact in facts:
+                    unified_variables = unify(condition, fact, variables)
+                    if unified_variables is not None:  # If unification was successful
+                        # Check if all conditions can be satisfied with the updated variables
+                        if all(backward_chaining(facts, rules, cond, unified_variables)[0] for cond in rule.conditions):
+                            return True, unified_variables
+
+    # The subgoal cannot be satisfied
+    return False, variables
+```
+
+When conclusions of multiple rules can be unified with the goal, the recursive function tries all of them (till a solution is found).
+Traversing the exponentially growing search space for soliving a SAT-problem is [NP-complete](https://en.wikipedia.org/wiki/NP-completeness)
+
+But sure, it is [Turing complete](https://en.wikipedia.org/wiki/Prolog#Turing_completeness) and that's want we want…
+
+
+## Example
+
+```pl
+/* facts *
+
+nobel_prize_winner("Marie Curie").
+turing_award_winner("Marvin Minsky").
+turing_award_winner("Edsger Wybe Dijkstra").
+turing_award_winner("Frances Allen").
+turing_award_winner("Barbara Liskov").
+turing_award_winner("Shafi Goldwasser").
+familiar_with_prolog(you).
+
+/* rules */
+
+smart(Person) :- nobel_prize_winner(Person).
+smart(Person) :- turing_award_winner(Person).
+smart(Person) :- knowledgeable(Person), problem_solver(Person).
+knowledgeable(P) :- familiar_with_prolog(P).
+problem_solver(P) :- logic_programmer(P).
+logic_programmer(P) :- familiar_with_prolog(P).
+
+/* query / goal */
+
+?- smart(Who).
+```
+
+The subtree of the search space that lead to results look like this…
+For each node you see the remaining goals and the variable substitutions.
+
+```
+smart(Who), []
+├── nobel_prize_winner(Who), []
+│   └── true, [Who = "Marie Curie"]
+├── turing_award_winner(Who)
+│   ├── true, [Who = "Marvin Minsky"]
+│   ├── true, [Who = "Edsger Wybe Dijkstra"]
+│   ├── true, [Who = "Frances Allen"]
+│   ├── true, [Who = "Barbara Liskov"]
+│   └── true, [Who = "Shafi Goldwasser"]
+└── knowledgeable(Who), problem_solver(Who), []
+    └── familiar_with_prolog(Who), problem_solver(Who), []
+        └── problem_solver(you), [Who = you]
+            └── logic_programmer(you), [Who = you]
+                └── familiar_with_prolog(you), [Who = you]
+                    └── true, [Who = you]
+```
+
+Here another visuaization (similar to an [and–or tree](https://en.wikipedia.org/wiki/And%E2%80%93or_tree)) of the predicates that need to be traversed for proving `smart(you)`:
+
+```
+          +---------------------+
+          |      smart(Who)     |
+          +---------------------+
+                   |
+                   |
+          +--------+----------------+
+          |                         |
++---------------------+   +---------------------+
+| knowledgeable(Who)  |   | problem_solver(Who) |
++---------------------+   +---------------------+
+           \                        |
+            \            +-----------------------+
+             \           | logic_programmer(Who) |
+              \          +-----------------------+
+	       \                    /
+	        \                  /
+          +----------------------------+
+          | familiar_with_prolog (Who) |
+          +----------------------------+
+                       |
+                       |
+             +---------------------+
+             |     smart(you)      |
+             +---------------------+
+```

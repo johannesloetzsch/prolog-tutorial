@@ -1,0 +1,48 @@
+# Setup
+
+## Implementations
+
+Before you start, you have to choose one of the many existing implementations.
+Happily there is an [ISO standart](https://www.iso.org/standard/21413.html), defining a common core language called [ISO Prolog](https://en.wikipedia.org/wiki/Prolog#ISO_Prolog).
+If you choose an [implementation](https://en.wikipedia.org/wiki/Comparison_of_Prolog_implementations#Main_features) supporting this standart, you will be able to write Prolog code, which is [runable](https://en.wikipedia.org/wiki/Comparison_of_Prolog_implementations#Portability) on different prolog implementations.
+
+If portability of your code is not significant for your choice of an implementation, you might want to look for the many interesting implementation specific language [Extensions](./extensions.html).
+
+Most linux distributions have packages for at least [GNU Prolog](https://en.wikipedia.org/wiki/GNU_Prolog) and [SWI-Prolog](https://en.wikipedia.org/wiki/SWI-Prolog).
+Other widespread implementations include [Ciao](https://en.wikipedia.org/wiki/Ciao_(programming_language) and [YAP](https://en.wikipedia.org/wiki/YAP_(Prolog).
+Personally I have good experience with the very powerfull [XSB](https://en.wikipedia.org/wiki/XSB).
+
+Recently I got aware of [Scryer Prolog](https://github.com/mthom/scryer-prolog), a modern Prolog implementation written in Rust 😍
+
+
+## Scryer Prolog
+
+The developers [claim](https://github.com/mthom/scryer-prolog/?tab=readme-ov-file#scryer-prolog):
+
+> Scryer Prolog aims to become to ISO Prolog what GHC is to Haskell: an open source industrial strength production environment that is also a testbed for bleeding edge research in logic and constraint programming, which is itself written in a high-level language.
+
+Scryer [supports WebAssembly](https://github.com/mthom/scryer-prolog/?tab=readme-ov-file#building-webassembly) 😀 It can very easily be used from Javascript as this [example](https://github.com/mthom/scryer-prolog/?tab=readme-ov-file#building-webassembly) shows…
+
+### Playground
+
+Thanks to WebAssembly support and the [Scryer Playground](https://github.com/aarroyoc/scryer-playground), you can simply try Prolog at this simple website without installing anything. If you are new to Prolog, this [hints how to use the Playground](playground.html) might be helpfull…
+
+### Installation
+
+First check if scryer is available from the packet manager of your distribution…
+
+…otherwise [building it yourself](https://github.com/mthom/scryer-prolog/?tab=readme-ov-file#native-compilation) is easy, since only cargo is required.
+
+The official [installation instructins](https://github.com/mthom/scryer-prolog/?tab=readme-ov-file#installing-scryer-prolog) explain how to use [Precompiled binaries](https://github.com/mthom/scryer-prolog/?tab=readme-ov-file#binaries) and [Docker container](https://github.com/mthom/scryer-prolog/?tab=readme-ov-file#docker-install).
+
+### Nix
+
+If you are already a [Nix](https://nixos.org/) fanboy, you can start scryer with this simple command:
+
+```sh
+nix run nixpkgs#scryer-prolog
+```
+
+You may also be interested in how to [package prolog code](nix-packaging.html) for Nix.
+
+If you love logic programming and declarative representations of knowledge, but don't know the declarative and reproducible buildsystem Nix and the linux distribution [NixOS](https://nixos.org/learn/), you may want [learn](https://nixos.org/learn/) about it… 😉

@@ -1,0 +1,231 @@
+# Prolog Syntax
+
+## Terms
+
+[Terms](https://en.wikipedia.org/wiki/Prolog#Data_types) are the fundamental building blocks of prolog.
+
+### Atomar terms
+
+#### Constants
+
+In prolog trivial data can be represented by *booleans*, *numbers*, *characters* and *symbols*.
+
+Feel free to try this queries on a query prompt:
+
+```pl
+/*** Booleans ***/
+
+?-
+=(FirstRuleOfTheTautologyClub, true).
+
+?-
+=(I_Always_Lie, false).
+
+
+/* Numbers can be integers or floats */
+
+?-
+=(Answer, 42).
+
+?-
+=(PI_approximation, 3.14159).
+
+
+/*** Characters ***/
+
+?-
+=(NewlineChar, '\n').
+
+?-
+char_code('\n', AsciiCode).  /* char_code is a builtin operator */
+
+
+/*** Symbols ***/
+/* are like enums */
+/* start with a lower case character or are single quoted */
+
+?-
+=(Symbl, s).
+
+?-
+=(Symbl, a_longer_symbol).
+
+?-
+=(Symbl, 'A quoted Symbol is not limited to begin with lower case characters').
+
+?-
+=(Symbol, 'I ♥ Unic😉de').
+
+?-
+=(symbol, 'symbol').  /* symbols are 'symbols', if quoted or not */
+```
+
+
+### Variables
+
+Variables are placeholders for arbitrary terms. In prolog they start with an upper case character.
+
+Most of the previous examples already contained a variable.
+
+```pl
+?-
+=(X, Y).  /* query for a solution, so that X is Y */
+
+//->  X = A, Y = A.
+```
+
+The answer can be read as: X and Y can be the same, when both of them are the same as an unbound (fresh) variable A.
+
+Depending on the environment, we might receive this answer instead:
+
+```pl
+//-> X = Y.
+```
+
+Use "`_`" (underscore) as a placeholder for variables you are not interested in:
+
+```pl
+?-
+=(X, _).
+```
+
+Depending on the environment we might receive:
+
+```pl
+//->  X = A.  /* X can be any unbound variable A */
+```
+
+Or simply:
+
+```pl
+//->  true.  /* yes, there are solutions */
+```
+
+
+### Compound terms
+
+Multiple terms can be compound to a new term.
+
+They are similar to named tuples, structs or objects in other languages.
+
+```pl
+?-
+=(X, student(john_doe, 23, computer_science)).
+```
+
+The next query requests [unification](https://en.wikipedia.org/wiki/Unification_(computer_science%29) (destructuring or pattern matching) on the elements (arguments) of the compound:
+
+```pl
+?- =(student(Name, Age, Faculty), student(john_doe, 23, computer_science)).
+//->  Name = john_doe, Age = 23, Faculty = computer_science.
+```
+
+```pl
+?- =(lecturer(Name, Age, Faculty), student(john_doe, 20, computer_science)).
+//->  false.
+```
+
+
+#### Lists and Strings
+
+Lists are a special cases of compound terms.
+
+```pl
+?-
+=(Weekdays, [monday, tuesday, wednesday, thursday, friday, saturday, sunday]).
+```
+
+Strings are lists of characters.
+
+```pl
+?-
+=([X, Y, Z, Y, X], "rotor").  /* test a 5 character palindrom */
+   X = r, Y = o, Z = t.
+```
+
+Later we will use module predicates to [manipulate lists and strings](https://www.scryer.pl/lists).
+
+
+#### Symbols as character sequences
+
+It is important to understand, that symbols are no strings.
+
+```pl
+?-
+=('hello', "hello").
+//->  false.
+```
+
+But when needed, there are possibilities to use them in a similar way (or even convert them):
+
+```pl
+?-
+atom_concat('Hello, ', 'World!', Result).
+//->  Result = 'Hello, World!'
+
+?-
+atom_codes('Hello', AsciiChars).
+//->  AsciiChars = [72,101,108,108,111].
+
+?-
+atom_codes(Message, [72,101,108,108,111]).
+//->  Message = 'Hello'.
+```
+
+## Functors
+
+Functors are symbols with [arity](https://en.wikipedia.org/wiki/Arity) (number of arguments), representing a function or a relation. The same symbol can be used for different arities, but than are interpreted as independent functors.
+
+Compound terms use functors:
+
+In `student(john_doe, 23, computer_science)` we used the functor `student` with arity 3 (denoted as `student/3`).
+
+Atomar terms (booleans, numbers, characters and symbols) are constants. They are functors with arity 0.
+
+### Predicates and Relations
+
+Predicates are functors, which are interpreted as booleans. Predicates are used to define facts, rules and queries.
+
+In prolog, predicates are the common way of representing relations. Relations can be translated into a representation by sets. [src/scientists.pl](scientists.html) contains an example:
+
+```pl
+?-
+findall(X, logician(X), RelationSet).
+```
+
+
+## Operators
+
+Operators can combine, manipulate or evaluate terms or expressions into new expressions.
+
+While predicates and other functors in prolog use [prefix](https://en.wikipedia.org/wiki/Polish_notation) notation, operators allow prefix, infix and postfix notation.
+
+The built-in predicate `op/3` can be used to define custom operators.
+
+
+## Expressions
+
+Expressions are build from terms and operators.
+
+There are logical expressions (exaluating to a boolean) and arithmetic expressions.
+
+
+## Clauses
+
+Facts, Rules and Queries are Clauses.
+
+In prolog all clauses are [Horn clauses](https://en.wikipedia.org/wiki/Horn_clause).
+
+This means they can be represented as [implications](https://en.wikipedia.org/wiki/Material_conditional).
+
+HEAD ← BODY  ≡  HEAD ∨ ¬ BODY  ≡  HEAD ∨ ¬ ( p1 Λ p2 Λ p3 Λ … Λ pn )
+
+In prolog syntax:
+
+```pl
+HEAD :- BODY.
+```
+
+The HEAD must be a single predicate.
+
+The BODY can be any conjunction of logical expressions.
