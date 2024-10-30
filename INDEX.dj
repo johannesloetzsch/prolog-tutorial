@@ -1,6 +1,21 @@
-# Prolog
+# What is Prolog?
 
-## What is Prolog?
+```pl
+?- fact("prolog", _, "a", X).
+   X = "programming languaguage".
 
+?- fact("prolog", _, "origins in", X).
+   X = "artificial intelligence"
+;  X = "automated theorem proving"
+;  X = "computational linguistics".
+
+?- fact("prolog", _, "based on", X).
+   X = "first-order logic"
+;  X = "horn clauses".
 ```
-```
+
+## About this Tutorial
+
+This tutorial attempts to give you an introduction in how to use prolog and how it works.
+
+We hope the examples helps you to start well into the world of logic programming… Have fun :)

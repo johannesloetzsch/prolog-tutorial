@@ -13,7 +13,7 @@ learn_pages([
 		   page("Semantics", "Basics", "semantics.dj"),
 		   page("Hello World", "Basics", "hello_world.dj"),
 		   page("Overview", "Extensions", "extensions.dj"),
-		   page("Shebang", "Packaging", "shebang.dj"),
+		   page("Shebang", "Packaging", "shebang_.dj"),
 		   page("Nix packages", "Packaging", "nix-packaging.dj"),
 		   page("Documentation", "Packaging", "documentation.dj")
 ]).
