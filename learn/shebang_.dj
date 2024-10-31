@@ -2,7 +2,7 @@
 
 You can start your prolog scripts with a [shebang-line](https://en.wikipedia.org/wiki/Shebang_(Unix%29). This makes them runable without specifying the interpreter.
 
-This repo contains an [example](../shebang.html) inspired from [here](https://github.com/mthom/scryer-prolog/issues/2170#issuecomment-1821713993):
+This repo contains an [example](shebang.html) inspired from [here](https://github.com/mthom/scryer-prolog/issues/2170#issuecomment-1821713993):
 
 ```sh
 ./src/shebang.pl 

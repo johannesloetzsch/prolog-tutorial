@@ -5,7 +5,7 @@ The first line of this file contains the „magic“ :)
 
 It is both valid shell script as a prolog comment.
 
-More infos can be found [here](learn/shebang.html)
+More infos can be found [here](shebang_.html)
 */
 
 

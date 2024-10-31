@@ -1,7 +1,7 @@
 :- module(facts_about_prolog, [ (smart)/1, (nobel_prize_winner)/1, (turing_award_winner)/1, (logic_programmer)/1, (familiar_with_prolog)/1, (problem_solver)/1, (knowledgeable)/1 ]).
 
 /** 
-The example is used at [Semantics](./learn/semantics.html)
+The example is used at [Semantics](semantics.html)
 */
 
 nobel_prize_winner("Marie Curie").

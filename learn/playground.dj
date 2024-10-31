@@ -122,4 +122,4 @@ logician(Who), \+ computer_pioneer(Who).
 ```
 
 
-More examples on this knowlede base can be found in this repository in [src/scientists.pl](../scientists.html).
+More examples on this knowlede base can be found in this repository in [src/scientists.pl](scientists.html).
